@@ -49,6 +49,9 @@ namespace UnhollowerBaseLib.Injection
         public static void RegisterTypeInIl2Cpp(Type type) => RegisterTypeInIl2Cpp(type, true);
         public static void RegisterTypeInIl2Cpp(Type type, bool logSuccess)
         {
+            if (type == null)
+                throw new ArgumentException($"Type argument cannot be null");
+
             if (type.IsGenericType || type.IsGenericTypeDefinition)
                 throw new ArgumentException($"Type {type} is generic and can't be used in il2cpp");
 
@@ -58,53 +61,30 @@ namespace UnhollowerBaseLib.Injection
 
             var baseType = type.BaseType;
             if (baseType == null)
-            {
-                LogSupport.Error($"Class {type} does not inherit from a class registered in il2cpp");
-                return;
-            }
-                
+                throw new ArgumentException($"Class {type} does not inherit from a class registered in il2cpp");
+
             var baseClassPointer = UnityVersionHandler.Wrap((Il2CppClass*)Il2CppClassPointerStore.ReadClassPointerForType(baseType));
             if (baseClassPointer == null)
             {
                 RegisterTypeInIl2Cpp(baseType, logSuccess);
                 baseClassPointer = UnityVersionHandler.Wrap((Il2CppClass*)Il2CppClassPointerStore.ReadClassPointerForType(baseType));
-                if (baseClassPointer == null)
-                {
-                    LogSupport.Error($"Base class {baseType} of class {type} could not be registered in il2cpp");
-                    return;
-                }
             }
 
             if (baseClassPointer.ValueType || baseClassPointer.EnumType)
-            {
-                LogSupport.Error($"Base class {baseType} is value type and can't be inherited from");
-                return;
-            }
+                throw new ArgumentException($"Base class {baseType} is value type and can't be inherited from");
 
             if (baseClassPointer.IsGeneric)
-            {
-                LogSupport.Error($"Base class {baseType} is generic and can't be inherited from");
-                return;
-            }
+                throw new ArgumentException($"Base class {baseType} is generic and can't be inherited from");
 
             if ((baseClassPointer.Flags & Il2CppClassAttributes.TYPE_ATTRIBUTE_SEALED) != 0)
-            {
-                LogSupport.Error($"Base class {baseType} is sealed and can't be inherited from");
-                return;
-            }
+                throw new ArgumentException($"Base class {baseType} is sealed and can't be inherited from");
 
             if ((baseClassPointer.Flags & Il2CppClassAttributes.TYPE_ATTRIBUTE_INTERFACE) != 0)
-            {
-                LogSupport.Error($"Base class {baseType} is an interface and can't be inherited from");
-                return;
-            }
+                throw new ArgumentException($"Base class {baseType} is an interface and can't be inherited from");
 
             lock (InjectedTypes)
                 if (!InjectedTypes.Add(type.FullName))
-                {
-                    LogSupport.Error($"Type with FullName {type.FullName} is already injected. Don't inject the same type twice, or use a different namespace");
-                    return;
-                }
+                    throw new ArgumentException($"Type with FullName {type.FullName} is already injected. Don't inject the same type twice, or use a different namespace");
 
             NativePatches.MaybeApplyHooks();
             if (FakeAssembly == null) CreateFakeAssembly();
