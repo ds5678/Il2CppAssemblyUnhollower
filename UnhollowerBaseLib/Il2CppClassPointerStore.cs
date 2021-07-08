@@ -30,4 +30,21 @@ namespace UnhollowerBaseLib
             }
         }
     }
+
+    internal static class Il2CppClassPointerStore
+    {
+        internal static IntPtr ReadClassPointerForType(Type type)
+        {
+            if (type == null) return IntPtr.Zero;
+            if (type == typeof(void)) return Il2CppClassPointerStore<Il2CppSystem.Void>.NativeClassPtr;
+            return (IntPtr)typeof(Il2CppClassPointerStore<>).MakeGenericType(type)
+                .GetField(nameof(Il2CppClassPointerStore<int>.NativeClassPtr)).GetValue(null);
+        }
+
+        internal static void WriteClassPointerForType(Type type, IntPtr value)
+        {
+            typeof(Il2CppClassPointerStore<>).MakeGenericType(type)
+                .GetField(nameof(Il2CppClassPointerStore<int>.NativeClassPtr)).SetValue(null, value);
+        }
+    }
 }

@@ -10,13 +10,9 @@ namespace UnhollowerBaseLib
         private static int ourElementTypeSize;
         private static bool ourElementIsValueType;
         
-        public Il2CppReferenceArray(IntPtr nativeObject) : base(nativeObject)
-        {
-        }
+        public Il2CppReferenceArray(IntPtr nativeObject) : base(nativeObject) { }
 
-        public Il2CppReferenceArray(long size) : base(AllocateArray(size))
-        {
-        }
+        public Il2CppReferenceArray(long size) : base(AllocateArray(size)) { }
 
         public Il2CppReferenceArray(T[] arr) : base(AllocateArray(arr.Length))
         {

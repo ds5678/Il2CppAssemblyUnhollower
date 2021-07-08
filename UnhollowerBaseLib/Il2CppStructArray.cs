@@ -4,13 +4,9 @@ namespace UnhollowerBaseLib
 {
     public class Il2CppStructArray<T> : Il2CppArrayBase<T> where T: unmanaged
     {
-        public Il2CppStructArray(IntPtr nativeObject) : base(nativeObject)
-        {
-        }
+        public Il2CppStructArray(IntPtr nativeObject) : base(nativeObject) { }
 
-        public Il2CppStructArray(long size) : base(AllocateArray(size))
-        {
-        }
+        public Il2CppStructArray(long size) : base(AllocateArray(size)) { }
 
         static Il2CppStructArray()
         {

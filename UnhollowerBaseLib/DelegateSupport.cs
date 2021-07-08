@@ -5,12 +5,23 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Text;
-using UnhollowerBaseLib;
 using UnhollowerBaseLib.Runtime;
 using Object = Il2CppSystem.Object;
 using ValueType = Il2CppSystem.ValueType;
 
 namespace UnhollowerRuntimeLib
+{
+    [Obsolete("Use UnhollowerBaseLib.DelegateSupport instead.")]
+    public static class DelegateSupport
+    {
+        public static TIl2Cpp ConvertDelegate<TIl2Cpp>(Delegate @delegate) where TIl2Cpp : UnhollowerBaseLib.Il2CppObjectBase
+        {
+            return UnhollowerBaseLib.DelegateSupport.ConvertDelegate<TIl2Cpp>(@delegate);
+        }
+    }
+}
+
+namespace UnhollowerBaseLib
 {
     public static unsafe class DelegateSupport
     {
@@ -210,7 +221,7 @@ namespace UnhollowerRuntimeLib
                 throw new ArgumentException($"Type {typeof(TIl2Cpp)} has uninitialized class pointer");
             
             if (Il2CppClassPointerStore<Il2CppToMonoDelegateReference>.NativeClassPtr == IntPtr.Zero)
-                ClassInjector.RegisterTypeInIl2Cpp<Il2CppToMonoDelegateReference>();
+                Injection.ClassInjector.RegisterTypeInIl2Cpp<Il2CppToMonoDelegateReference>();
 
             var il2CppDelegateType = Il2CppSystem.Type.internal_from_handle(IL2CPP.il2cpp_class_get_type(classTypePtr));
             var nativeDelegateInvokeMethod = il2CppDelegateType.GetMethod("Invoke");
@@ -344,9 +355,9 @@ namespace UnhollowerRuntimeLib
             {
             }
 
-            public Il2CppToMonoDelegateReference(Delegate referencedDelegate, IntPtr methodInfo) : base(ClassInjector.DerivedConstructorPointer<Il2CppToMonoDelegateReference>())
+            public Il2CppToMonoDelegateReference(Delegate referencedDelegate, IntPtr methodInfo) : base(Injection.ClassInjector.DerivedConstructorPointer<Il2CppToMonoDelegateReference>())
             {
-                ClassInjector.DerivedConstructorBody(this);
+                Injection.ClassInjector.DerivedConstructorBody(this);
                 
                 ReferencedDelegate = referencedDelegate;
                 MethodInfo = methodInfo;

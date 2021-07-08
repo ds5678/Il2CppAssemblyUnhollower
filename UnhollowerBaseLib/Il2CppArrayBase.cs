@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnhollowerRuntimeLib;
 
 namespace UnhollowerBaseLib
 {
@@ -16,27 +15,19 @@ namespace UnhollowerBaseLib
             var targetClassType = IL2CPP.il2cpp_array_class_get(nativeClassPtr, 1);
             if (targetClassType == IntPtr.Zero)
                 return;
-            
-            ClassInjector.WriteClassPointerForType(ownType, targetClassType);
-            ClassInjector.WriteClassPointerForType(typeof(Il2CppArrayBase<T>), targetClassType);
+
+            Il2CppClassPointerStore.WriteClassPointerForType(ownType, targetClassType);
+            Il2CppClassPointerStore.WriteClassPointerForType(typeof(Il2CppArrayBase<T>), targetClassType);
             Il2CppClassPointerStore<Il2CppArrayBase<T>>.CreatedTypeRedirect = ownType;
         }
 
-        protected Il2CppArrayBase(IntPtr pointer) : base(pointer)
-        {
-        }
+        protected Il2CppArrayBase(IntPtr pointer) : base(pointer) { }
 
         public int Length => (int) IL2CPP.il2cpp_array_length(Pointer);
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return new IndexEnumerator(this);
-        }
+        public IEnumerator<T> GetEnumerator() => new IndexEnumerator(this);
 
         void ICollection<T>.Add(T item) => ThrowImmutableLength();
 

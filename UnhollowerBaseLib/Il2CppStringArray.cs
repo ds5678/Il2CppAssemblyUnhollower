@@ -4,13 +4,9 @@ namespace UnhollowerBaseLib
 {
     public class Il2CppStringArray : Il2CppArrayBase<string>
     {
-        public Il2CppStringArray(IntPtr pointer) : base(pointer)
-        {
-        }
+        public Il2CppStringArray(IntPtr pointer) : base(pointer) { }
         
-        public Il2CppStringArray(long size) : base(AllocateArray(size))
-        {
-        }
+        public Il2CppStringArray(long size) : base(AllocateArray(size)) { }
 
         public Il2CppStringArray(string[] arr) : base(AllocateArray(arr.Length))
         {

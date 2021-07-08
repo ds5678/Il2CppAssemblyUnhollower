@@ -2,7 +2,7 @@ using System.Linq;
 using AssemblyUnhollower.Contexts;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using UnhollowerRuntimeLib;
+using UnhollowerBaseLib;
 
 namespace AssemblyUnhollower.Passes
 {
